@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class BootStrapData implements CommandLineRunner {
 
-    private final AuthorRepository authorRepository;
-    private final BookRepository bookRepository;
-    private final PublisherRepository publisherRepository;
+    private AuthorRepository authorRepository;
+    private BookRepository bookRepository;
+    private PublisherRepository publisherRepository;
 
     public BootStrapData(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
         this.authorRepository = authorRepository;
@@ -24,34 +24,40 @@ public class BootStrapData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Author jacek = new Author("Jacek","Starzynski");
-        Book kajak = new Book("Kajakiem przez swiat","313931");
+        Author adam = new Author("Adam", "Mickiewicz");
+        Book panTadeusz = new Book("Pan Tadeusz","123456");
 
-        jacek.getBooks().add(kajak);
-        kajak.getAuthors().add(jacek);
-
-        authorRepository.save(jacek);
-        bookRepository.save(kajak);
-
-        Author adam = new Author("Adam","Mickiewicz");
-        Book tadeusz = new Book("Pan Tadeusz","123123");
-
-        adam.getBooks().add(kajak);
-        tadeusz.getAuthors().add(jacek);
+        adam.getBooks().add(panTadeusz);
+        panTadeusz.getAuthors().add(adam);
 
         authorRepository.save(adam);
-        bookRepository.save(tadeusz);
+        bookRepository.save(panTadeusz);
 
-        Publisher pb1 = new Publisher("Adrian","Nowosielski");
-        Publisher pb2 = new Publisher("Jacek","Korytkowski");
+        Author fiodor = new Author("Fiodor", "Dostojewski");
+        Book kara = new Book("Zbrodnia i Kara","12345678");
 
-        publisherRepository.save(pb1);
-        publisherRepository.save(pb2);
+        fiodor.getBooks().add(kara);
+        kara.getAuthors().add(fiodor);
 
+        authorRepository.save(fiodor);
+        bookRepository.save(kara);
 
-        System.out.println("BootStrap started");
-        System.out.println("Number of books: "+bookRepository.count());
-        System.out.println("Number of publishers: "+publisherRepository.count());
+        Publisher nowaEra = new Publisher("Nowa Era", "Aleje Jerozolimskie 5", "Warszawa", "mazowieckie");
+        Publisher empik = new Publisher("Empik", "Saperow 15", "Poznan", "wielkopolskie");
 
+        nowaEra.getBooks().add(panTadeusz);
+        panTadeusz.setPublisher(nowaEra);
+
+        empik.getBooks().add(kara);
+        kara.setPublisher(empik);
+
+        publisherRepository.save(nowaEra);
+        publisherRepository.save(empik);
+
+        System.out.println("Started BootStrap");
+        System.out.println("Number of books : "+ bookRepository.count());
+        System.out.println("Number of authors : "+ authorRepository.count());
+        System.out.println("Number of publishers : "+ publisherRepository.count());
+        System.out.println("Empik's number of books : "+ empik.getBooks().size());
     }
 }
