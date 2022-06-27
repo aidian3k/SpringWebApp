@@ -1,40 +1,47 @@
 package aidian3k.springframework.spring5webapp.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Objects;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-
 public class Publisher {
-    private String name;
-    private String address;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue ( strategy = GenerationType.AUTO)
     private Long id;
+    private String name;
+    private String addressLine;
+    private String city;
+    private String state;
 
-    public Publisher(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
+    @OneToMany
+    @JoinColumn ( name = "publisher_id")
+    Set<Book> books = new HashSet<>();
 
     public Publisher() {
-
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Publisher publisher = (Publisher) o;
-        return Objects.equals(id, publisher.id);
+    public Publisher(String name, String addressLine, String city, String state) {
+        this.name = name;
+        this.addressLine = addressLine;
+        this.city = city;
+        this.state = state;
     }
 
-    @Override
-    public int hashCode() {
-        return id!=null ? id.hashCode() : 0;
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -46,18 +53,59 @@ public class Publisher {
     }
 
     public String getAddress() {
-        return address;
+        return addressLine;
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        this.addressLine = address;
     }
 
-    public Long getId() {
-        return id;
+    public String getAddressLine() {
+        return addressLine;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setAddressLine(String addressLine) {
+        this.addressLine = addressLine;
     }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    @Override
+    public String toString() {
+        return "Publisher{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + addressLine + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Publisher publisher = (Publisher) o;
+
+        return id != null ? id.equals(publisher.id) : publisher.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
 }
